@@ -1,0 +1,233 @@
+<!doctype html>
+<html>
+
+<head>
+    <link href="style.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <h1>Tracking Canadian Housing Market Affordability (1999 to 2023)</h1>
+
+    <p>This post digs into historical trends in the Canadian housing market using data on home prices, household incomes, and mortgage rates to paint a picture of housing affordability across the country.</p>
+
+    <p>The interactive tools below examine 14 major Canadian cities (Toronto, Montreal, Vancouver, Calgary, etc.), with data spanning the years of 1999 to 2023.</p>
+
+    &nbsp;
+
+    <h2>Multi-City Trends - 1999 to 2023</h2>
+
+    <p>This is an interactive tool to explore the state of the Canadian real estate market across 6 indicators of housing affordability:</p>
+    <ul>
+        <li>Average home price by city<a href="#footnote1" aria-describedby="footnote-label" id="anchor1"></a></li>
+        <li>Household incomes (pre-tax median income)</li>
+        <li>Price-to-income ratio</li>
+        <li>Implied monthly mortgage payment for new homebuyers<a href="#footnote2" aria-describedby="footnote-label" id="anchor2"></a></li>
+        <li>Implied mortgage payment as a % of income</li>
+        <li>"Qualifying" income (income required to buy the average home)<a href="#footnote3" aria-describedby="footnote-label" id="anchor3"></a></li>
+    </ul>
+
+    <p>Pick an indicator from the drop-down menu below. Click the city labels in the chart to toggle them on/off.</p>
+
+    <div id="indicatorSelectionDiv">
+        <table id="indicatorMenuTable">
+            <tr>
+                <td class="selectionLabel">Indicator:</td>
+                <td>
+                    <select id="indicatorSelection" class="userInput select-style">
+                        <option class="indicatorSelectionOption" value="0">Home prices</option>
+                        <option class="citySelectionOption" value="1">Household income</option>
+                        <option class="citySelectionOption" value="2">Price-to-income ratio</option>
+                        <option class="citySelectionOption" value="3">Mortgage payment</option>
+                        <option class="citySelectionOption" value="4">Mortgage % of income</option>
+                        <option class="citySelectionOption" value="5">Qualifying income</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Adjust for inflation?</td>
+                <td>
+                    <label class="form-control"><input id="inflationCheckbox" class="userInput" type="checkbox" name="checkbox" /></label>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+    
+    <div id="noteDiv">
+        <span id="noteSpan"><b>Tip</b>: click the city names in the chart legend to add/remove them</span>
+    </div>
+
+    <div id="homePriceChartDiv">
+        <canvas id="homePriceChart"></canvas>
+    </div>
+
+    &nbsp;
+
+    <h2>Single City Spotlight - January 2023 Dashboard</h2>
+
+    <p>Select a city from the drop-down menu -- see the latest price / affordability indicators (together with comparisons versus the national average) in the table. See the annual % change in homes prices over time for your selected city in the chart.</p>
+
+    <div id="citySelectionDiv">
+        <table>
+            <tr>
+                <td class="selectionLabel">Location:</td>
+                <td>
+                    <select id="citySelection" class="userInput select-style">
+                        <option class="citySelectionOption" value="0">Canada (avg.)</option>
+                        <option class="citySelectionOption" value="1" selected="selected">Toronto</option>
+                        <option class="citySelectionOption" value="2">Montreal</option>
+                        <option class="citySelectionOption" value="3">Vancouver</option>
+                        <option class="citySelectionOption" value="4">Calgary</option>
+                        <option class="citySelectionOption" value="5">Edmonton</option>
+                        <option class="citySelectionOption" value="6">Ottawa</option>
+                        <option class="citySelectionOption" value="7">Winnipeg</option>
+                        <option class="citySelectionOption" value="8">Quebec City</option>
+                        <option class="citySelectionOption" value="9">Hamilton</option>
+                        <option class="citySelectionOption" value="10">Victoria</option>
+                        <option class="citySelectionOption" value="11">Halifax</option>
+                        <option class="citySelectionOption" value="12">Saskatoon</option>
+                        <option class="citySelectionOption" value="13">Regina</option>
+                        <option class="citySelectionOption" value="14">Moncton</option>
+                    </select>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="singleCityTableDiv">
+
+        <table id="singleCityTable">
+            <tr>
+                <th width="10%" class="descriptionCell" id="tableTitleCell">Data as of January 2023</th>
+                <th width="30%" class="cityTableHeader">Average Home Price</th>
+                <th width="30%" class="cityTableHeader">Median Household Income</th>
+                <th width="30%" class="cityTableHeader">Price-to-Income Ratio</th>
+            </tr>
+            <tr>
+                <td class="descriptionCell">Value</td>
+                <td class="cityTableData" id="homePriceCell">x</td>
+                <td class="cityTableData" id="householdIncomeCell">y</td>
+                <td class="cityTableData" id="priceIncomeRatioCell">z</td>
+            </tr>
+            <tr>
+                <td class="descriptionCell">Diff. vs national avg.</td>
+                <td class="cityTableDelta" id="homePriceDeltaCell">x</td>
+                <td class="cityTableDelta" id="householdIncomeDeltaCell">y</td>
+                <td class="cityTableDelta" id="priceIncomeRatioDeltaCell">z</td>
+            </tr>
+            <tr>
+                <td class="descriptionCell">Notes</td>
+                <td class="cityTableDesc">Price of the average home</td>
+                <td class="cityTableDesc">Median pre-tax household income</td>
+                <td class="cityTableDesc">Home price divided by pre-tax household income</td>
+            </tr>
+            <tr>
+                <th class="descriptionCell"></th>
+                <th class="cityTableHeader">Monthly Mortgage Payment</th>
+                <th class="cityTableHeader">Mortgage as a % of Income</th>
+                <th class="cityTableHeader">Qualifying Income</th>
+            </tr>
+            <tr>
+                <td class="descriptionCell">Value</td>
+                <td class="cityTableData" id="mortgageCell">a</td>
+                <td class="cityTableData" id="mortgagePercentCell">b</td>
+                <td class="cityTableData" id="qualifyingIncomeCell">c</td>
+            </tr>
+            <tr>
+                <td class="descriptionCell">Diff. vs national avg.</td>
+                <td class="cityTableDelta" id="mortgageDeltaCell">a</td>
+                <td class="cityTableDelta" id="mortgagePercentDeltaCell">b</td>
+                <td class="cityTableDelta" id="qualifyingIncomeDeltaCell">c</td>
+            </tr>
+            <tr>
+                <td class="descriptionCell">Notes</td>
+                <td class="cityTableDesc">Assumes 20% down payment, 25-year mortgage term, current 5-year fixed rate of 5.86%</td>
+                <td class="cityTableDesc">Annual mortgage payment divided by annual pre-tax household income</td>
+                <td class="cityTableDesc">Pre-tax income needed to support the implied mortgage payment, at 32% of income paid towards the mortgage</td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div id="annualReturnChartDiv">
+        <canvas id="annualReturnChart"></canvas>
+    </div>
+
+    &nbsp;
+
+    <h2>Canadian Mortgage Rates Over Time - 1999 to 2023</h2>
+
+    <p>To give further context to the trends seen above, here is data on Canadian average mortgage rates over time, from 1999 to 2023.</p>
+    
+    <p>Mortgage rates are perhaps the single most important driver of changes in home prices. As mortgage rates fall, home prices typically rise. On the other hand, higher mortgage rates typically result in declining home prices. For example: from 2021 to 2023, mortage rates increased from 3.2% to 5.8%, while average home prices in Canada dropped by roughly 15%.</p>
+
+    <div id="mortgageRateChartDiv">
+        <canvas id="mortgageRateChart"></canvas>
+    </div>
+
+    &nbsp;
+
+    <h2>The Most Expensive & Least Expensive Cities in Canada</h2>
+
+    <p>Cities with the most expensive homes (based on the average home price in Jan. 2023 as per the MLS home price index):</p>
+    <ul>
+        <li>Vancouver: $1,124,400 (average home price)</li>
+        <li>Toronto: $1,069,000</li>
+        <li>Victoria: $881,600</li>
+        <li>Hamilton: $799,800</li>
+        <li>Ottawa: $612,100</li>
+    </ul>
+
+    <p>Cities with the least expensive homes:</p>
+    <ul>
+        <li>Quebec City: $304,600</li>
+        <li>Moncton: $312,300</li>
+        <li>Victoria: $320,100</li>
+        <li>Winnipeg: $326,300</li>
+        <li>Edmonton: $370,900</li>
+    </ul>
+
+    &nbsp;
+
+    <h2>Data Sources and Notes</h2>
+
+    <p>The underlying data for this post came from a variety of sources noted below:</p>
+    <ul>
+        <li>Home prices (2005 to 2023): Canadian Real Estate Association - <a href="https://www.crea.ca/housing-market-stats/mls-home-price-index/hpi-tool/" rel="noopener" target="_blank">MLS home price index data, seasonally adjusted values</a></li>
+        <li>Home prices (1999 to 2004): <a href="https://housepriceindex.ca/#maps=c11" rel="noopener" target="_blank">Teranet home price index</a></li>
+        <li>Mortgage rates: Canadian Mortgage and Housing Corporation / StatCan - <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410014501" rel="noopener" target="_blank">5 year convential mortgage rate</a></li>
+        <li>Household incomes: StatCan - <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=9810005701" rel="noopener" target="_blank">2020 household income by region</a>, combined with <a href="https://www150.statcan.gc.ca/t1/tbl1/en/cv.action?pid=1410022201" rel="noopener" target="_blank">monthly data on employment incomes by province</a></li>
+        <li>Canadian inflation data: StatCan - <a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=1810000401" rel="noopener" target="_blank">consumer price index (all items), not seasonally adjusted</a></li>
+    </ul>
+
+    <footer>
+        <p>Footnotes:</p>
+        <p id="footnote1">[1]: In this post, the "average" home price is based on the MLS home price index, which tracks the price of a “benchmark” home in each city over time, assuming constant quality/attributes.  <a href="#anchor1" aria-label="Back to content">↩</a></p>
+        <p id="footnote2">[2]: The implied monthly mortgage payment is calculated assuming that a homebuyer purchases the average home in their city, taking on a mortgage equal to 80% of the average home price with a 25-year term and a mortgage rate equal to the then current average 5-year fixed mortgage rate at the time of purchase.  <a href="#anchor2" aria-label="Back to content">↩</a></p>
+        <p id="footnote3">[3]: "Qualifying income" is the estimated income required to buy the average home in each city, assuming that a homeowner's mortgage payment is equal to 32% of their pre-tax household income. The 32% affordability threshold is a rule of thumb used in the Canadian mortgage lending industry. For example, you would need an annual pre-tax household income of $112,500 to qualify for a mortgage payment which costs $3,000 per month.  <a href="#anchor3" aria-label="Back to content">↩</a></p>
+    </footer>
+
+    &nbsp;
+
+    <h2>Related Reading</h2>
+    <p>Other explorations into incomes, taxes, and the overall cost of living in Canada:</p>
+    <ul>
+        <li><b><a href="https://themeasureofaplan.com/canadian-income-tax-calculator/" target="_blank" rel="noopener">2023 Canadian income tax calculator</a></b> -- a resource to compare tax rates and after-tax incomes across Canada</li> 	
+        <li><b><a href="https://themeasureofaplan.com/rent-prices-versus-income/" target="_blank" rel="noopener">Rent prices versus income</a></b> in major Canadian cities</li>
+        <li><b><a href="https://themeasureofaplan.com/exploring-canadian-income/" target="_blank" rel="noopener">Exploring Canadian incomes</a></b> by province, age group, and sex</li>
+    </ul>
+
+    &nbsp;
+
+    <p>-----</p>
+    <p>Header illustration credit: <a href="https://timothycook.com/" rel="noopener" target="_blank">Timothy Cook</a></p>
+
+    &nbsp;
+
+    <!--- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="canadianRealEstateScript.js"></script>
+
+</body>
+
+</html>
